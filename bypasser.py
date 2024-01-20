@@ -1688,7 +1688,46 @@ def onepagelink(url):
     except BaseException:
         return "Something went wrong :("
 
+# pkin.me
 
+def pkin(url):
+    client = cloudscraper.create_scraper(allow_brotli=False)
+    DOMAIN = "https://go.paisakamalo.in/"
+    url = url[:-1] if url[-1] == "/" else url
+    code = url.split("/")[-1]
+    final_url = f"{DOMAIN}/{code}"
+    h = {"referer": f"https://{urlparse(client.get(url).url).netloc}/"}
+    resp = client.get(final_url, headers=h)
+    soup = BeautifulSoup(resp.content, "html.parser")
+    inputs = soup.find_all("input")
+    data = {input.get("name"): input.get("value") for input in inputs}
+    h = {"x-requested-with": "XMLHttpRequest"}
+    time.sleep(8)
+    r = client.post(f"{DOMAIN}/links/go", data=data, headers=h)
+    try:
+        return r.json()["url"]
+    except BaseException:
+        return "Something went wrong :("
+
+# linkearn2me
+
+def linkearn2me(url):
+    client = cloudscraper.create_scraper(allow_brotli=False)
+    DOMAIN = "https://blog.filepresident.com/"
+    url = url[:-1] if url[-1] == '/' else url
+    code = url.split("/")[-1]
+    final_url = f"{DOMAIN}/{code}"
+    h = {"referer": f'https://{urlparse(client.get(url).url).netloc}/'}
+    resp = client.get(final_url,headers=h)
+    soup = BeautifulSoup(resp.content, "html.parser")
+    inputs = soup.find_all("input")
+    data = { input.get('name'): input.get('value') for input in inputs }
+    h = { "x-requested-with": "XMLHttpRequest" }
+    time.sleep(5)
+    r = client.post(f"{DOMAIN}/links/go", data=data, headers=h)
+    try: return r.json()['url']
+    except: return "Something went wrong :("
+	    
 #####################################################################################################
 # dulink
 
@@ -2199,7 +2238,17 @@ def shortners(url):
     elif "https://onepagelink.in/" in url:
         print("entered onepagelink: ",url)
         return onepagelink(url)
+	    
+    # pkin.me
+    elif "https://pkin.me/DpTE" in url:
+        print("entered pkin: ",url)
+        return pkin(url)
 
+    # linkearn2me
+    elif "https://link.earn2me.com/2WAZ" in url:
+        print("entered linkearn2me: ",url)
+        return linkearn2me(url)
+	    
     # gyanilinks
     elif "https://gyanilinks.com/" in url or "https://gtlinks.me/" in url:
         print("entered gyanilinks: ",url)
